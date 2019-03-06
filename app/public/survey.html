@@ -269,59 +269,7 @@
 
         });
 
-          $("#add-btn").on("click", function (event) {
-            event.preventDefault();
-            let nameOfUser = $("#name").val().trim();
-            let photoOfUser = $("#photo").val().trim();
-            if (nameOfUser != '') {
-                let tempVar = false;
-                let scores = [];
-                for (let i = 1; i < 11; i++) {
-                    let value = $(`#ex${i}`).slider('getValue');
-                    scores.push(value);
-                }
-                var newCharacter = {
-                    name: nameOfUser,
-                    photo: photoOfUser,
-                    scores: scores,
-                };
-                $.get("/api/friends/", function (data) {
-                    let minArr = [];
-                    for (let i = 0; i < data.length; i++) {
-                        let currentScore = 0;
-                        for (let l = 0; l < data[i].scores.length; l++) {
-                            let c = newCharacter.scores[l] - data[i].scores[l];
-                            currentScore += parseFloat(c);
-                        }
-                        data[i].friendScore = Math.abs(currentScore);
-                        minArr.push(parseFloat(data[i].friendScore));
-                    }
-                    for (let b = -1; b < 10; b++) {
-                        let index;
-                        if (minArr.includes(b)) {
-                            index = minArr.indexOf(b);
-                            $('#name-title').text(data[index].name + '');
-                            $('#profile-image').attr('src', data[index].photo);
-                            console.log(data[index]);
-                            break;
-                        }
-                    }
-                });
-                $.get("/api/friends/", function (data) {
-                    for (let i = 0; i < data.length; i++) {
-                        if (data[i].name === newCharacter.name) {
-                            alert('Cannot re-add same person!');
-                            tempVar = true;
-                        }
-                    }
-                    if (!tempVar) {
-                        $.post("/api/friends", newCharacter);
-                    }
-                });
-            } else {
-                $('#name-title').text('Must input valid name!');
-            }
-
+        
 
 
     </script>
