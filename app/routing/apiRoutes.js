@@ -18,24 +18,47 @@ app.post("/api/friends", function (req, res) {
 
     userData.routeName = userData.name.replace(/\s+/g, "").toLowerCase();
 
-    //console.log(userData);
+    console.log(req.body.scores);
 
     friendsList.push(userData);
 
-    // console.log(res.json(userData));
+    res.json(userData);
         //get the score of each friend 
-for (let i = 0; i < friends.length; i++) {
+/*for (let i = 0; i < friends.length; i++) {
 
     var friendScores = friends[i].scores;
    //console.log(friendScores);
-  console.log(sum(friendScores));
-  
-  
-  }; 
-
+  console.log(sum(friendScores));*/
 });
 
-}
+
+
+
+  $.get("/api/friends/", function (data) {
+    let minArr = [];
+    for (let i = 0; i < data.length; i++) {
+        let currentScore = 0;
+        for (let l = 0; l < data[i].scores.length; l++) {
+            let c = userData.scores[l] - data[i].scores[l];
+            currentScore += parseFloat(c);
+        }
+        data[i].friendScore = Math.abs(currentScore);
+        minArr.push(parseFloat(data[i].friendScore));
+    }
+    for (let v = -1; v < 10; v++) {
+        let index;
+        if (minArr.includes(v)) {
+            index = minArr.indexOf(v);
+            $('#name-title').text(data[index].name + '');
+            $('#profile-image').attr('src', data[index].photo);
+            console.log(data[index]);
+            break;
+        }
+    }
+});
+
+  
+};
 
 
 
@@ -47,19 +70,4 @@ for (let i = 0; i < friends.length; i++) {
   
   
   
-  function sum(input){
-               
-    if (toString.call(input) !== "[object Array]")
-       return false;
-         
-               var total =  0;
-               for(var i=0;i<input.length;i++)
-                 {                  
-                   if(isNaN(input[i])){
-                   continue;
-                    }
-                     total += Number(input[i]);
-                  }
-                return total;
-               }
   
